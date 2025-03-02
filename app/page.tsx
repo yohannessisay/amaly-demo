@@ -9,7 +9,7 @@ import { useCallback, useEffect } from "react";
 export default function Home() {
   const queryClient = useQueryClient();
 
-  const { data, fetchNextPage, hasNextPage, isFetchingNextPage } =
+  const { data, fetchNextPage, hasNextPage, isFetchingNextPage, isLoading } =
     useInfiniteQuery({
       queryKey: ["characters"],
       queryFn: fetchCharacters,
@@ -59,23 +59,29 @@ export default function Home() {
   return (
     <div className="min-h-screen bg-black p-6">
       <Header />
-      <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
-        {data?.pages.map((page) =>
-          page.results.map((character: any,index:number) => (
-            <Card
-              key={index}
-              id={character.id}
-              name={character.name}
-              image={character.image}
-              species={character.species}
-              status={character.status}
-              locallySaved={character.locallySaved}
-              deleteCharacter={deleteCharacter}
-              getStatusBadge={getStatusBadge}
-            />
-          ))
-        )}
-      </div>
+      {isLoading ? (
+        <div className="flex justify-center items-center min-h-screen">
+          <div className="w-12 h-12 border-4 border-blue-500 border-dashed rounded-full animate-spin"></div>
+        </div>
+      ) : (
+        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
+          {data?.pages.map((page) =>
+            page.results.map((character: any, index: number) => (
+              <Card
+                key={index}
+                id={character.id}
+                name={character.name}
+                image={character.image}
+                species={character.species}
+                status={character.status}
+                locallySaved={character.locallySaved}
+                deleteCharacter={deleteCharacter}
+                getStatusBadge={getStatusBadge}
+              />
+            ))
+          )}
+        </div>
+      )}
       {isFetchingNextPage && (
         <div className="mt-6 text-center text-white">Loading more...</div>
       )}
