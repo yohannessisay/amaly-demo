@@ -34,6 +34,7 @@ const Card: React.FC<Character> = ({
           height={150}
           alt={name || "Character Image"}
           className="w-32 h-32 rounded-full object-cover shadow-md"
+          priority={id === 2}
         />
       ) : (
         <div className="w-32 h-32 rounded-full bg-gray-200 flex items-center justify-center text-gray-600">

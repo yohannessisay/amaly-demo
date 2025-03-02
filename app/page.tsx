@@ -4,7 +4,7 @@ import { useInfiniteQuery, useQueryClient } from "@tanstack/react-query";
 import Header from "@/components/Header";
 import { fetchCharacters } from "@/utils/Api";
 import Card from "@/components/Card"; // Import the Card component
-import { useEffect } from "react";
+import { useCallback, useEffect } from "react";
 
 export default function Home() {
   const queryClient = useQueryClient();
@@ -33,7 +33,12 @@ export default function Home() {
     }
   };
 
-  const handleScroll = () => {
+  const deleteCharacter = (characterName: string) => {
+    localStorage.removeItem(characterName);
+    queryClient.invalidateQueries({ queryKey: ["characters"] });
+  };
+
+  const handleScroll = useCallback(() => {
     if (
       window.innerHeight + window.scrollY >=
       document.documentElement.scrollHeight - 500
@@ -42,28 +47,23 @@ export default function Home() {
         fetchNextPage();
       }
     }
-  };
-
-  const deleteCharacter = (characterName: string) => {
-    localStorage.removeItem(characterName);
-    queryClient.invalidateQueries({ queryKey: ["characters"] });
-  };
+  }, [hasNextPage, isFetchingNextPage, fetchNextPage]);
 
   useEffect(() => {
     window.addEventListener("scroll", handleScroll);
     return () => {
       window.removeEventListener("scroll", handleScroll);
     };
-  }, [hasNextPage, isFetchingNextPage, handleScroll]);
+  }, [handleScroll]);
 
   return (
     <div className="min-h-screen bg-black p-6">
       <Header />
       <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
         {data?.pages.map((page) =>
-          page.results.map((character: any) => (
+          page.results.map((character: any,index:number) => (
             <Card
-              key={character.id}
+              key={index}
               id={character.id}
               name={character.name}
               image={character.image}

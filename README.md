@@ -54,9 +54,12 @@ To run this project locally, you need to have **Node.js** and **npm** installed.
 
 ### Installation
 
-1. Clone the repository:
+1. Clone the repository and install npm packages:
 
    ```bash
-   git clone https://github.com/your-username/nextjs-tanstack-query-coding-challenge.git
-   cd nextjs-tanstack-query-coding-challenge
+   git clone https://github.com/yohannessisay/amaly-demo.git
+   cd amaly-demo
+   npm install
+   npm run dev
+
    ```
